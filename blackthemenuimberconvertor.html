@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Number System Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* Enhanced Aurora Effect with Downward Flow */
+        .aurora-container {
+            position: fixed;
+            width: 100%;
+            height: 200%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 0;
+            animation: slideDown 30s linear infinite;
+        }
+
+        @keyframes slideDown {
+            0% {
+                transform: translateY(-50%);
+            }
+            100% {
+                transform: translateY(0%);
+            }
+        }
+
+        .aurora {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(-45deg,
+                rgba(0, 255, 170, 0.15) 0%,
+                rgba(0, 128, 255, 0.15) 25%,
+                rgba(128, 0, 255, 0.15) 50%,
+                rgba(255, 0, 255, 0.15) 75%,
+                rgba(0, 255, 170, 0.15) 100%
+            );
+            filter: blur(20px);
+            animation: flowRotate 20s infinite linear;
+        }
+
+        .aurora-2 {
+            background: linear-gradient(-60deg,
+                rgba(0, 255, 170, 0.2) 0%,
+                rgba(0, 128, 255, 0.2) 25%,
+                rgba(128, 0, 255, 0.2) 50%,
+                rgba(255, 0, 255, 0.2) 75%,
+                rgba(0, 255, 170, 0.2) 100%
+            );
+            animation: flowRotate 15s infinite linear reverse;
+            filter: blur(15px);
+        }
+
+        .aurora-3 {
+            background: linear-gradient(-30deg,
+                rgba(0, 255, 170, 0.1) 0%,
+                rgba(0, 128, 255, 0.1) 25%,
+                rgba(128, 0, 255, 0.1) 50%,
+                rgba(255, 0, 255, 0.1) 75%,
+                rgba(0, 255, 170, 0.1) 100%
+            );
+            animation: flowRotate 25s infinite linear;
+            filter: blur(25px);
+        }
+
+        @keyframes flowRotate {
+            0% {
+                transform: rotate(0deg) translateY(0) scale(1);
+            }
+            50% {
+                transform: rotate(180deg) translateY(100px) scale(1.2);
+            }
+            100% {
+                transform: rotate(360deg) translateY(0) scale(1);
+            }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            background: rgba(255, 255, 255, 1);
+            border: 2px solid rgba(0, 0, 0, 0.2);
+        }
+
+        .fancy-button {
+            background: linear-gradient(45deg, 
+                rgba(0, 255, 170, 0.8),
+                rgba(0, 128, 255, 0.8));
+            background-size: 400% 400%;
+            animation: buttonGradient 5s ease infinite;
+            transition: all 0.3s ease;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes buttonGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .fancy-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        select.input-field {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='black' height='24' viewBox='0 0 24 24' width='24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-position: right 10px center;
+            background-repeat: no-repeat;
+            padding-right: 40px;
+        }
+
+        /* New styles for enhanced UI/UX */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .copy-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .copy-icon {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="aurora-container">
+        <div class="aurora"></div>
+        <div class="aurora aurora-2"></div>
+        <div class="aurora aurora-3"></div>
+    </div>
+
+    <div class="w-full max-w-5xl mx-auto relative z-10">
+        <div class="glass rounded-3xl p-8 md:p-12">
+            <h1 class="text-6xl md:text-7xl font-bold text-white text-center mb-12" style="text-shadow: 0 0 10px rgba(0, 255, 170, 0.5)">
+                Number Converter
+            </h1>
+            
+            <div class="space-y-10">
+                <!-- Input Section -->
+                <div>
+                    <label class="block text-white text-3xl font-medium mb-6">Enter Number:</label>
+                    <input type="text" id="input" 
+                           placeholder="Type your number here..." 
+                           class="w-full px-8 py-6 rounded-2xl input-field text-black text-3xl placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-black/10">
+                </div>
+
+                <!-- Conversion Options -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div>
+                        <label class="block text-white text-3xl font-medium mb-6">From:</label>
+                        <select id="from" 
+                                class="w-full px-8 py-6 rounded-2xl input-field text-black text-3xl focus:outline-none focus:ring-4 focus:ring-black/10 appearance-none">
+                            <option value="binary">Binary (Base-2)</option>
+                            <option value="decimal">Decimal (Base-10)</option>
+                            <option value="hexadecimal">Hexadecimal (Base-16)</option>
+                            <option value="octal">Octal (Base-8)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-white text-3xl font-medium mb-6">To:</label>
+                        <select id="to" 
+                                class="w-full px-8 py-6 rounded-2xl input-field text-black text-3xl focus:outline-none focus:ring-4 focus:ring-black/10 appearance-none">
+                            <option value="decimal">Decimal (Base-10)</option>
+                            <option value="binary">Binary (Base-2)</option>
+                            <option value="hexadecimal">Hexadecimal (Base-16)</option>
+                            <option value="octal">Octal (Base-8)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Convert Button -->
+                <button onclick="convertNumber()" 
+                        class="w-full fancy-button text-white text-4xl font-bold py-8 px-12 rounded-2xl mb-8">
+                    CONVERT ⟶
+                </button>
+
+                <!-- Result Section -->
+                <div class="relative">
+                    <label class="block text-white text-3xl font-medium mb-6">Result:</label>
+                    <input type="text" id="result" readonly
+                           class="w-full px-8 py-6 rounded-2xl input-field text-black text-3xl focus:outline-none focus:ring-4 focus:ring-black/10">
+                    <button onclick="copyResult()" class="copy-button tooltip">
+                        <span class="tooltiptext">Copy to clipboard</span>
+                        <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Error Message -->
+                <div id="error" class="text-red-200 text-2xl text-center hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function convertNumber() {
+            const input = document.getElementById('input').value.trim();
+            const fromSystem = document.getElementById('from').value;
+            const toSystem = document.getElementById('to').value;
+            const errorDiv = document.getElementById('error');
+            const resultInput = document.getElementById('result');
+
+            errorDiv.classList.add('hidden');
+            resultInput.value = '';
+
+            try {
+                if (!input) {
+                    throw new Error('Please enter a number');
+                }
+
+                let decimal;
+                switch(fromSystem) {
+                    case 'binary':
+                        if (!/^[01]+$/.test(input)) {
+                            throw new Error('Invalid binary number (use only 0 and 1)');
+                        }
+                        decimal = parseInt(input, 2);
+                        break;
+                    case 'decimal':
+                        if (!/^\d+$/.test(input)) {
+                            throw new Error('Invalid decimal number (use only 0-9)');
+                        }
+                        decimal = parseInt(input, 10);
+                        break;
+                    case 'hexadecimal':
+                        if (!/^[0-9A-Fa-f]+$/.test(input)) {
+                            throw new Error('Invalid hexadecimal number (use 0-9 and A-F)');
+                        }
+                        decimal = parseInt(input, 16);
+                        break;
+                    case 'octal':
+                        if (!/^[0-7]+$/.test(input)) {
+                            throw new Error('Invalid octal number (use only 0-7)');
+                        }
+                        decimal = parseInt(input, 8);
+                        break;
+                }
+
+                let result;
+                switch(toSystem) {
+                    case 'binary':
+                        result = decimal.toString(2);
+                        break;
+                    case 'decimal':
+                        result = decimal.toString(10);
+                        break;
+                    case 'hexadecimal':
+                        result = decimal.toString(16).toUpperCase();
+                        break;
+                    case 'octal':
+                        result = decimal.toString(8);
+                        break;
+                }
+
+                resultInput.value = result;
+                resultInput.classList.add('floating');
+                setTimeout(() => resultInput.classList.remove('floating'), 3000);
+
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        document.getElementById('input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                convertNumber();
+            }
+        });
+
+        function copyResult() {
+            const resultInput = document.getElementById('result');
+            resultInput.select();
+            document.execCommand('copy');
+            
+            const tooltip = document.querySelector('.tooltiptext');
+            tooltip.textContent = 'Copied!';
+            setTimeout(() => {
+                tooltip.textContent = 'Copy to clipboard';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
